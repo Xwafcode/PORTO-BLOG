@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (!process.env.VERCEL) {
+    require('dotenv').config();
+}
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
@@ -58,7 +60,7 @@ app.use('/', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
 
 // Start Server (Only start locally, Vercel will use module.exports)
-if (process.env.NODE_ENV !== 'production') {
+if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });

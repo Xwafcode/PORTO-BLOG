@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const multer = require('multer');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const mammoth = require('mammoth');
 
 // Multer setup using memory storage for Vercel / Supabase
@@ -31,37 +32,45 @@ const uploadToSupabase = async (supabase, file) => {
 };
 
 // Authentication Middleware
-const requireAuth = (req, res, next) => {
-    if (req.session.user) {
-        next();
-    } else {
-        res.redirect('/admin/login');
-    }
-};
+router.get('/logout', (req, res) => {
+    res.clearCookie('admin_token');
+    res.redirect('/admin/login');
+});
+
+// Removed middleware from here
 
 // Routes - Auth
 router.get('/login', (req, res) => {
-    if (req.session.user) return res.redirect('/admin/dashboard');
+    if (res.locals.user) return res.redirect('/admin/dashboard');
     res.render('admin/login');
 });
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (username === 'ariqew' && password === 'ariqew123') {
-        req.session.user = { username };
+        // Create JWT Token
+        const token = jwt.sign({ username }, process.env.JWT_SECRET || 'blog_secret_key_2026', { expiresIn: '24h' });
+        
+        // Set HTTP-Only Cookie
+        res.cookie('admin_token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production' || process.env.VERCEL,
+            maxAge: 24 * 60 * 60 * 1000
+        });
+        
         res.redirect('/admin/dashboard');
     } else {
         res.render('admin/login', { error: 'Invalid credentials' });
     }
 });
 
-router.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
-
 // Protect all routes below this point
-router.use(requireAuth);
+router.use((req, res, next) => {
+    if (!res.locals.user) {
+        return res.redirect('/admin/login');
+    }
+    next();
+});
 
 // Routes - Dashboard
 router.get('/dashboard', async (req, res) => {

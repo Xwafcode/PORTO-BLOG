@@ -10,7 +10,8 @@ if (!process.env.VERCEL) {
 }
 const express = require('express');
 const path = require('path');
-// session removed
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
@@ -53,8 +54,8 @@ app.get('/debug-env', (req, res) => {
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(session({...})) removed for Vercel compatibility
 
 // View Engine
 app.set('view engine', 'ejs');
@@ -69,7 +70,16 @@ app.use(async (req, res, next) => {
         console.error("Error fetching settings:", err);
         res.locals.settings = {};
     }
-    res.locals.user = (req.session && req.session.user) ? req.session.user : null;
+    // Check JWT from cookie
+    res.locals.user = null;
+    if (req.cookies && req.cookies.admin_token) {
+        try {
+            const decoded = jwt.verify(req.cookies.admin_token, process.env.JWT_SECRET || 'blog_secret_key_2026');
+            res.locals.user = decoded;
+        } catch (err) {
+            console.error("JWT Verification failed:", err);
+        }
+    }
     
     // Attach supabase to req for routes to use
     req.supabase = supabase;

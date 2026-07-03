@@ -1,0 +1,87 @@
+<nav class="fixed w-full z-50 top-0 left-0 bg-neo-white neo-border-b border-b-[3px] border-neo-black py-4 transition-all duration-300" id="main-nav">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <!-- Logo -->
+        <a href="/" class="font-heading font-black text-2xl bg-neo-white px-4 py-2 neo-border rounded-lg neo-shadow-sm hover:neo-shadow transition-all inline-block">
+            <%= settings.authorName.split(' ')[0] %><span class="text-neo-blue">.BLOG</span>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-2 bg-white rounded-full neo-border px-4 py-2 neo-shadow-sm">
+            <a href="/" class="font-bold px-4 py-1 rounded-full hover:bg-neo-yellow transition-colors">Home</a>
+            <a href="/blog" class="font-bold px-4 py-1 rounded-full hover:bg-neo-pink transition-colors">Publications</a>
+            <a href="/contact" class="font-bold px-4 py-1 rounded-full hover:bg-neo-blue transition-colors">Contact</a>
+            
+            <% if (user) { %>
+                <a href="/admin/dashboard" class="font-bold px-4 py-1 rounded-full bg-neo-black text-white ml-2">Admin</a>
+            <% } %>
+        </div>
+        
+        <!-- CTA & Search -->
+        <div class="hidden md:flex items-center gap-4">
+            <form action="/search" method="GET" class="relative">
+                <input type="text" name="q" placeholder="Search..." required class="neo-border rounded-lg px-4 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-neo-blue bg-white font-medium">
+                <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" class="text-neo-black"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </form>
+            
+            <a href="https://wa.me/<%= settings.whatsappNumber %>?text=<%= encodeURIComponent(settings.whatsappMessage) %>" class="bg-neo-yellow neo-border px-6 py-2 rounded-lg font-bold neo-shadow flex items-center gap-2 hover:bg-yellow-400">
+                Let's Talk
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </a>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="md:hidden bg-neo-yellow neo-border p-2 rounded-lg neo-shadow" id="menuToggle">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div class="hidden md:hidden absolute top-full left-0 w-full bg-neo-white neo-border-b border-b-[3px] border-neo-black p-6 flex-col gap-4" id="navbarMenu">
+        <a href="/" class="font-bold text-xl block border-b-2 border-black/10 pb-2">Home</a>
+        <a href="/blog" class="font-bold text-xl block border-b-2 border-black/10 pb-2">Publications</a>
+        <a href="/contact" class="font-bold text-xl block border-b-2 border-black/10 pb-2">Contact</a>
+        <form action="/search" method="GET" class="mt-2">
+            <input type="text" name="q" placeholder="Search..." required class="neo-border rounded-lg px-4 py-3 w-full bg-white font-medium mb-4">
+            <button type="submit" class="w-full bg-neo-blue text-white neo-border py-3 rounded-lg font-bold neo-shadow">Search</button>
+        </form>
+    </div>
+</nav>
+
+<!-- Spacer to prevent content from going under fixed navbar -->
+<div class="h-24"></div>
+
+<script>
+    // Simple toggle for mobile menu
+    document.getElementById('menuToggle').addEventListener('click', function() {
+        const menu = document.getElementById('navbarMenu');
+        if(menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            menu.classList.add('flex');
+        } else {
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
+        }
+    });
+
+    // Hide navbar on scroll down, show on scroll up
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        const nav = document.getElementById('main-nav');
+        
+        if (currentScroll <= 0) {
+            nav.classList.remove('-translate-y-full');
+        } else if (currentScroll > lastScroll && currentScroll > 100) {
+            // Scroll down
+            nav.classList.add('-translate-y-full');
+            document.getElementById('navbarMenu').classList.add('hidden');
+            document.getElementById('navbarMenu').classList.remove('flex');
+        } else {
+            // Scroll up
+            nav.classList.remove('-translate-y-full');
+        }
+        lastScroll = currentScroll;
+    });
+</script>

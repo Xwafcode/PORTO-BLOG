@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= locals.title ? title + ' — ' : '' %><%= settings.blogName %></title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="<%= locals.description || settings.description %>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif']
+                    },
+                    colors: {
+                        neo: {
+                            yellow: '#f4c753',
+                            blue: '#4c93e6',
+                            purple: '#9b6cff',
+                            pink: '#ff5c77',
+                            white: '#f9f6ef',
+                            black: '#121212',
+                            red: '#ef4444'
+                        }
+                    },
+                    boxShadow: {
+                        'neo': '4px 4px 0px 0px rgba(0,0,0,1)',
+                        'neo-lg': '8px 8px 0px 0px rgba(0,0,0,1)',
+                        'neo-hover': '2px 2px 0px 0px rgba(0,0,0,1)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <script>gsap.registerPlugin(ScrollTrigger);</script>
+
+    <!-- Custom CSS Base -->
+    <style>
+        html { scroll-behavior: initial; }
+        body { overflow-x: hidden; }
+        .neo-border { border: 3px solid #121212; }
+        .neo-shadow { box-shadow: 4px 4px 0px 0px #121212; transition: all 0.2s; }
+        .neo-shadow:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px #121212; }
+        .neo-shadow-sm { box-shadow: 2px 2px 0px 0px #121212; transition: all 0.2s; }
+        .neo-shadow-sm:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px 0px #121212; }
+        .neo-shadow-static { box-shadow: 6px 6px 0px 0px #121212; }
+        .bg-grid { background-size: 40px 40px; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px); }
+        .bg-dot { background-size: 20px 20px; background-image: radial-gradient(#121212 1px, transparent 1px); }
+    </style>
+</head>
+<body class="font-sans antialiased text-neo-black bg-neo-white">
+    <%- include('navbar') %>
+    
+    <main class="min-h-screen">

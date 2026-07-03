@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - <%= settings.blogName %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h2>Admin Panel</h2>
+            <nav class="admin-nav">
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/articles">Articles</a>
+                <a href="/admin/experiences">Experiences (CV)</a>
+                <a href="/admin/settings" class="active">Settings</a>
+                <a href="/admin/logout" style="margin-top: auto;">Logout</a>
+            </nav>
+        </aside>
+        
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1>Blog Settings</h1>
+            </div>
+            
+            <div class="admin-card">
+                <form action="/admin/settings" method="POST">
+                    <h3>General Settings</h3>
+                    <div class="form-group">
+                        <label for="blogName">Blog Name</label>
+                        <input type="text" id="blogName" name="blogName" class="form-control" value="<%= settings.blogName %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tagline">Tagline</label>
+                        <input type="text" id="tagline" name="tagline" class="form-control" value="<%= settings.tagline %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">SEO Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="3"><%= settings.description %></textarea>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">Author Information</h3>
+                    <div class="form-group">
+                        <label for="authorName">Author Name</label>
+                        <input type="text" id="authorName" name="authorName" class="form-control" value="<%= settings.authorName %>">
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">WhatsApp Integration</h3>
+                    <div class="stat-grid" style="margin-bottom: var(--space-md);">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="whatsappNumber">WhatsApp Number (include country code, e.g. 62812...)</label>
+                            <input type="text" id="whatsappNumber" name="whatsappNumber" class="form-control" value="<%= settings.whatsappNumber %>">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="whatsappMessage">Default Pre-filled Message</label>
+                            <input type="text" id="whatsappMessage" name="whatsappMessage" class="form-control" value="<%= settings.whatsappMessage %>">
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">Appearance</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="darkModeDefault" <%= settings.darkModeDefault ? 'checked' : '' %>> 
+                            Enable Dark Mode by Default
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<%- include('../layouts/header', { title: 'Contact' }) %>
+
+<section class="bg-neo-yellow py-20 neo-border-b border-b-[3px] border-neo-black relative overflow-hidden bg-dot">
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="font-heading font-black text-6xl md:text-8xl text-white drop-shadow-[4px_4px_0_rgba(18,18,18,1)] uppercase leading-none mb-6 gsap-fade-up">
+            SAY<br>
+            <span class="text-neo-black drop-shadow-[4px_4px_0_rgba(255,255,255,1)]">HELLO.</span>
+        </h1>
+        <p class="text-xl md:text-2xl font-medium text-white max-w-2xl mx-auto bg-neo-black px-6 py-2 rounded-full inline-block neo-shadow-sm gsap-fade-up" style="animation-delay: 0.1s;">
+            Don't be a stranger!
+        </p>
+    </div>
+</section>
+
+<section class="py-24 bg-neo-white min-h-[50vh] flex items-center justify-center">
+    <div class="max-w-2xl w-full mx-auto px-6">
+        
+        <div class="bg-white neo-border rounded-3xl p-10 md:p-16 neo-shadow-lg text-center gsap-fade-up relative">
+            <div class="absolute -top-8 -left-8 bg-neo-blue neo-border p-4 rounded-full neo-shadow z-10 transform -rotate-12">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="white" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            
+            <svg viewBox="0 0 32 32" width="80" height="80" fill="#25d366" class="mx-auto mb-8 transform hover:scale-110 transition-transform"><path d="M16 2a13 13 0 0 0-11 20l-2 5 5.5-1.5A13 13 0 1 0 16 2zm0 2.5A10.5 10.5 0 0 1 24.3 22.8l-1.8.8-1.7-2.6c-.2-.3-.5-.4-.8-.4-.3 0-.6.1-.9.3l-1.2 1.4c-2.3-1.1-4.2-3-5.3-5.3l1.4-1.2c.2-.3.3-.6.3-.9 0-.3-.1-.6-.4-.8l-2.6-1.7c-.1-.1-.3-.1-.4-.1s-.3 0-.4.1L9 16.2c-.3.4-.4 1-.2 1.6.6 2.3 2 4.4 3.9 6.3 1.9 1.9 4 3.3 6.3 3.9.6.2 1.2.1 1.6-.2l1.8-1.5c.2-.2.3-.5.1-.8l-2.6-1.7c-.1-.1-.3-.2-.5-.2z"/></svg>
+            
+            <h2 class="font-heading font-black text-4xl mb-4">Let's Talk Law</h2>
+            <p class="font-medium text-lg text-gray-600 mb-10">
+                The fastest way to reach me is through WhatsApp. Click the button below to start a direct conversation.
+            </p>
+            
+            <a href="https://wa.me/<%= settings.whatsappNumber %>?text=<%= encodeURIComponent(settings.whatsappMessage) %>" target="_blank" class="inline-flex items-center justify-center w-full bg-[#25d366] text-white neo-border px-8 py-5 rounded-xl font-bold text-xl neo-shadow hover:bg-[#20bd5a] transition-colors gap-3">
+                Chat Now
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            
+        </div>
+        
+    </div>
+</section>
+
+<%- include('../layouts/footer') %>

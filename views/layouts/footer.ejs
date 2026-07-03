@@ -1,0 +1,128 @@
+    </main>
+
+    <footer class="bg-neo-yellow neo-border-t border-t-[3px] border-neo-black py-12 mt-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h3 class="font-heading font-bold text-3xl mb-2"><%= settings.blogName %></h3>
+                    <p class="font-medium"><%= settings.tagline %></p>
+                </div>
+                <div class="flex gap-4 font-bold text-lg">
+                    <a href="/" class="hover:underline">Home</a>
+                    <a href="/blog" class="hover:underline">Publications</a>
+                </div>
+                <a href="https://wa.me/<%= settings.whatsappNumber %>?text=<%= encodeURIComponent(settings.whatsappMessage) %>" 
+                   class="bg-neo-black text-neo-white px-6 py-3 rounded-full font-bold neo-shadow-sm flex items-center gap-2 hover:bg-gray-800 transition-colors">
+                   <svg viewBox="0 0 32 32" width="20" height="20" fill="currentColor"><path d="M16 2a13 13 0 0 0-11 20l-2 5 5.5-1.5A13 13 0 1 0 16 2zm0 2.5A10.5 10.5 0 0 1 24.3 22.8l-1.8.8-1.7-2.6c-.2-.3-.5-.4-.8-.4-.3 0-.6.1-.9.3l-1.2 1.4c-2.3-1.1-4.2-3-5.3-5.3l1.4-1.2c.2-.3.3-.6.3-.9 0-.3-.1-.6-.4-.8l-2.6-1.7c-.1-.1-.3-.1-.4-.1s-.3 0-.4.1L9 16.2c-.3.4-.4 1-.2 1.6.6 2.3 2 4.4 3.9 6.3 1.9 1.9 4 3.3 6.3 3.9.6.2 1.2.1 1.6-.2l1.8-1.5c.2-.2.3-.5.1-.8l-2.6-1.7c-.1-.1-.3-.2-.5-.2z"/></svg>
+                   Let's Talk
+                </a>
+            </div>
+            <div class="mt-12 pt-6 border-t-2 border-neo-black/20 text-center font-medium">
+                <p>&copy; <%= new Date().getFullYear() %> <%= settings.authorName %>. All rights reserved.</p>
+            </div>
+        </div>
+        <!-- Huge background text -->
+        <div class="absolute -bottom-10 left-0 w-full overflow-hidden opacity-10 pointer-events-none flex justify-center">
+            <span class="font-heading font-black text-[15vw] whitespace-nowrap leading-none"><%= settings.authorName.toUpperCase() %></span>
+        </div>
+    </footer>
+
+    <style>
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scroll-reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .scroll-reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .article-card {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .article-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+
+    <!-- Init Scripts -->
+    <script>
+        // Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // GSAP ScrollTrigger Integration
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Simple global fade up animation for elements with .gsap-fade-up (excluding article-card which uses CSS)
+        const fadeUpElements = document.querySelectorAll('.gsap-fade-up:not(.article-card)');
+        fadeUpElements.forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power3.out"
+            });
+        });
+
+        // IntersectionObserver for CSS-based scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const delay = el.dataset.delay || 0;
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, delay * 1000);
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.scroll-reveal, .scroll-reveal-left').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Staggered observer for article cards
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const cards = document.querySelectorAll('.article-card');
+                    cards.forEach((card, i) => {
+                        setTimeout(() => card.classList.add('visible'), i * 100);
+                    });
+                    cardObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.05 });
+
+        const cardGrid = document.querySelector('.article-card');
+        if (cardGrid) cardObserver.observe(cardGrid);
+    </script>
+</body>
+</html>

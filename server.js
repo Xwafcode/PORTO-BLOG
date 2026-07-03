@@ -47,8 +47,12 @@ app.use(async (req, res, next) => {
 app.use('/', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Start Server (Only start locally, Vercel will use module.exports)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
 

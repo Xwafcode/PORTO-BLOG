@@ -47,6 +47,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Global variables for templates (Async fetching from Supabase)
 app.use(async (req, res, next) => {
+    /*
     try {
         const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'default').single();
         res.locals.settings = settingsData || {};
@@ -54,6 +55,8 @@ app.use(async (req, res, next) => {
         console.error("Error fetching settings:", err);
         res.locals.settings = {};
     }
+    */
+    res.locals.settings = {};
     res.locals.user = (req.session && req.session.user) ? req.session.user : null;
     
     // Attach supabase to req for routes to use

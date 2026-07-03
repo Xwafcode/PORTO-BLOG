@@ -132,7 +132,7 @@ router.post('/articles', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { na
         status: status || 'draft',
         thumbnail: thumbnailUrl,
         document: documentUrl,
-        author: req.session.user.username
+        author: res.locals.user.username
     };
     
     await req.supabase.from('articles').insert([newArticle]);

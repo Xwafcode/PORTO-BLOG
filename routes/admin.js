@@ -72,6 +72,11 @@ router.use((req, res, next) => {
     next();
 });
 
+// Root Admin Route
+router.get('/', (req, res) => {
+    res.redirect('/admin/dashboard');
+});
+
 // Routes - Dashboard
 router.get('/dashboard', async (req, res) => {
     try {

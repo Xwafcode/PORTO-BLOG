@@ -54,7 +54,7 @@ app.use(async (req, res, next) => {
         console.error("Error fetching settings:", err);
         res.locals.settings = {};
     }
-    res.locals.user = req.session.user || null;
+    res.locals.user = (req.session && req.session.user) ? req.session.user : null;
     
     // Attach supabase to req for routes to use
     req.supabase = supabase;
@@ -66,8 +66,14 @@ app.use(async (req, res, next) => {
 app.use('/', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
 
-// Start Server (Only start locally, Vercel will use module.exports)
-if (!process.env.VERCEL) {
+// Express Error Handler
+app.use((err, req, res, next) => {
+    console.error("EXPRESS ERROR HANDLER CAUGHT:", err);
+    res.status(500).send("Express Error: " + err.message);
+});
+
+// Start Server
+if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });

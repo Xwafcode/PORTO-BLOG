@@ -1,3 +1,10 @@
+process.on('uncaughtException', (err) => {
+    console.error('CRITICAL UNCAUGHT EXCEPTION:', err);
+});
+process.on('unhandledRejection', (reason) => {
+    console.error('CRITICAL UNHANDLED REJECTION:', reason);
+});
+
 if (!process.env.VERCEL) {
     require('dotenv').config();
 }

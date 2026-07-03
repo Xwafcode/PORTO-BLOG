@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 const mammoth = require('mammoth');
 
 // Multer setup using memory storage for Vercel / Supabase
@@ -12,7 +12,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const uploadToSupabase = async (supabase, file) => {
     if (!file) return null;
     const ext = path.extname(file.originalname);
-    const filename = `${uuidv4()}${ext}`;
+    const filename = `${crypto.randomUUID()}${ext}`;
     
     const { data, error } = await supabase.storage
         .from('uploads')
@@ -108,7 +108,7 @@ router.post('/articles', upload.fields([{ name: 'thumbnail', maxCount: 1 }, { na
     }
     
     const newArticle = {
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         title,
         slug,
         excerpt,
@@ -177,7 +177,7 @@ router.get('/experiences', async (req, res) => {
 router.post('/experiences', async (req, res) => {
     const { title, organization, year, description } = req.body;
     await req.supabase.from('experiences').insert([{
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         title,
         organization,
         year,

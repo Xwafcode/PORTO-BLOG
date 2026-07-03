@@ -7,10 +7,20 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Initialize Supabase
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+// Initialize Supabase with fallbacks to prevent Vercel startup crash if env is missing
+const supabaseUrl = process.env.SUPABASE_URL || 'https://ytvbquzdkxzochidwigo.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY || 'dummy_key';
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Debug route to check env
+app.get('/debug-env', (req, res) => {
+    res.json({
+        hasUrl: !!process.env.SUPABASE_URL,
+        hasKey: !!process.env.SUPABASE_KEY,
+        nodeEnv: process.env.NODE_ENV
+    });
+});
+
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));

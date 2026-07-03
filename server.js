@@ -16,10 +16,29 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Initialize Supabase with fallbacks to prevent Vercel startup crash if env is missing
-const supabaseUrl = process.env.SUPABASE_URL || 'https://ytvbquzdkxzochidwigo.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY || 'dummy_key';
-const supabase = createClient(supabaseUrl, supabaseKey);
+let supabase;
+try {
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://ytvbquzdkxzochidwigo.supabase.co';
+    const supabaseKey = process.env.SUPABASE_KEY || 'dummy_key';
+    // Clean up quotes just in case the user accidentally included them in Vercel dashboard
+    const cleanUrl = supabaseUrl.replace(/^["']|["']$/g, '');
+    const cleanKey = supabaseKey.replace(/^["']|["']$/g, '');
+    supabase = createClient(cleanUrl, cleanKey);
+} catch (err) {
+    console.error("FATAL SUPABASE INIT ERROR:", err);
+    // Create a dummy supabase client so the app doesn't crash on boot
+    supabase = {
+        from: () => ({
+            select: () => ({
+                eq: () => ({
+                    single: async () => ({ data: null, error: err })
+                }),
+                order: async () => ({ data: null, error: err })
+            }),
+            insert: async () => ({ data: null, error: err })
+        })
+    };
+}
 
 // Debug route to check env
 app.get('/debug-env', (req, res) => {
@@ -43,7 +62,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Global variables for templates (Async fetching from Supabase)
 app.use(async (req, res, next) => {
-    /*
     try {
         const { data: settingsData } = await supabase.from('settings').select('*').eq('id', 'default').single();
         res.locals.settings = settingsData || {};
@@ -51,8 +69,6 @@ app.use(async (req, res, next) => {
         console.error("Error fetching settings:", err);
         res.locals.settings = {};
     }
-    */
-    res.locals.settings = {};
     res.locals.user = (req.session && req.session.user) ? req.session.user : null;
     
     // Attach supabase to req for routes to use

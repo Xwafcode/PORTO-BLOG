@@ -2,7 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    res.send("HELLO VERCEL - If you see this, Supabase/EJS is the culprit!");
+    try {
+        const [{ data: articles }, { data: experiences }] = await Promise.all([
+            req.supabase.from('articles')
+                .select('*')
+                .eq('status', 'published')
+                .order('createdAt', { ascending: false }),
+            req.supabase.from('experiences')
+                .select('*')
+                .order('year', { ascending: false })
+        ]);
+        
+        res.render('pages/home', { articles: articles || [], experiences: experiences || [] });
+    } catch (err) {
+        console.error(err);
+        res.render('pages/home', { articles: [], experiences: [] });
+    }
 });
 
 router.get('/blog', async (req, res) => {
